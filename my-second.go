@@ -1,6 +1,11 @@
 package main
 
-import "math"
+import (
+	"hash/crc32"
+	"io"
+	"math"
+	"os"
+)
 
 type Shape interface {
 	area() float64
@@ -60,4 +65,22 @@ func (this ByAge) Less(i, j int) bool {
 }
 func (this ByAge) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
+}
+
+func getHash(filename string) (uint32, error) { // open the file
+	f, err := os.Open(filename)
+	if err != nil {
+		return 0, err
+	}
+	// remember to always close opened files
+	defer f.Close() // create a hasher
+	h := crc32.NewIEEE()
+	// copy the file into the hasher
+	// - copy takes (dst, src) and returns (bytesWritten, error)
+	_, err = io.Copy(h, f)
+	// we don't care about how many bytes were written, but we do want to // handle the error
+	if err != nil {
+		return 0, err
+	}
+	return h.Sum32(), nil
 }

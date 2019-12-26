@@ -2,7 +2,10 @@ package main
 
 import (
 	"container/list"
+	"crypto/sha1"
+	"encoding/json"
 	"fmt"
+	"hash/crc32"
 	"io/ioutil"
 	"math"
 	"os"
@@ -238,6 +241,33 @@ func main() {
 	fmt.Println(kids)
 	sort.Sort(ByAge(kids))
 	fmt.Println(kids)
+
+	byteArr := []byte("test")
+	stringg := string([]byte{'t', 'e', 's', 't'})
+	fmt.Println(byteArr, stringg)
+
+	// create a hasher
+	h := crc32.NewIEEE()
+	// write our data to it
+	h.Write([]byte("test"))
+	// calculate the crc32 checksum
+	v := h.Sum32()
+	fmt.Println(v)
+	fmt.Println(getHash("package.json"))
+
+	sh3 := sha1.New()
+	h.Write([]byte("test"))
+	bs2 := sh3.Sum([]byte{})
+	fmt.Println(bs2)
+	myjsonbyte, _ := json.Marshal(kids)
+	byt := []byte(`{"num":6.13,"strs":["a","b"]}`)
+
+	fmt.Println(string(myjsonbyte))
+	var dat map[string]interface{}
+	var dat2 []Persona
+	json.Unmarshal(byt, &dat)
+	json.Unmarshal(myjsonbyte, &dat2)
+	fmt.Println(dat, dat2)
 }
 func makeEvenGenerator() func() uint {
 	i := uint(0)
