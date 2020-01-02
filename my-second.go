@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"hash/crc32"
 	"io"
 	"math"
@@ -83,4 +84,9 @@ func getHash(filename string) (uint32, error) { // open the file
 		return 0, err
 	}
 	return h.Sum32(), nil
+}
+func routinefn(from string) {
+	for i := 0; i < 3; i++ {
+		fmt.Println(from, ":", i)
+	}
 }

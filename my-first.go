@@ -13,6 +13,7 @@ import (
 	"reflect"
 	"sort"
 	"strings"
+	"time"
 )
 
 const s string = "constant"
@@ -268,6 +269,16 @@ func main() {
 	json.Unmarshal(byt, &dat)
 	json.Unmarshal(myjsonbyte, &dat2)
 	fmt.Println(dat, dat2)
+
+	routinefn("direct")
+
+	go routinefn("goroutine")
+
+	go func(msg string) {
+		fmt.Println(msg)
+	}("going")
+	time.Sleep(time.Second)
+	fmt.Println("done")
 }
 func makeEvenGenerator() func() uint {
 	i := uint(0)
