@@ -5,7 +5,6 @@ import (
 	"log"
 	"member-db-api/controller"
 	"member-db-api/loader"
-	compress "member-db-api/util"
 	"net/http"
 	"os"
 	"time"
@@ -32,6 +31,6 @@ func main() {
 	api.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "api v1")
 	})
-	api.HandleFunc("/members", compress.MakeGzipHandler(controller.GetAllMember)).Methods(http.MethodGet)
+	api.HandleFunc("/members", controller.GetAllMember).Methods(http.MethodGet)
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("server_port"), r))
 }

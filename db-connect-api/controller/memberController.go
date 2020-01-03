@@ -1,29 +1,19 @@
 package controller
 
 import (
-	"encoding/json"
+	u "member-db-api/util"
 	"net/http"
-
-	db "member-db-api/database"
 )
 
 // GetAllMember Controller will return all members
 var GetAllMember = func(w http.ResponseWriter, r *http.Request) {
-	// queries := mux.Vars(r)
-
-	w.Header().Set("Content-Type", "application/json")
-	data := db.GetDB(db.MemberDBName).GetMembers()
+	data := memberContext().GetMembers()
 	if data != nil {
-		b, err := json.Marshal(data)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(`{"error": "error marshalling data"}`))
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(b)
-		return
+		message := u.BaseSuccessResponse
+		message["data"] = data
+		u.Respond(w, message)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		u.Respond(w, u.BaseFailedResponse)
 	}
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte(`{"error": "not found"}`))
 }
