@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -19,18 +19,19 @@ func timeTrack(start time.Time, name string) {
 }
 
 func init() {
+	gin.SetMode(os.Getenv(gin.EnvGinMode))
+	defer timeTrack(time.Now(), "server load")
 	if e := godotenv.Load(); e != nil {
 		fmt.Println(e)
 	}
 	loader.InitAllContext()
-	defer timeTrack(time.Now(), "server load")
 }
 func main() {
-	r := mux.NewRouter().StrictSlash(true)
-	api := r.PathPrefix("/api/v1").Subrouter()
-	api.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "api v1")
-	})
-	api.HandleFunc("/members", controller.GetAllMember).Methods(http.MethodGet)
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+	api := r.Group("/api/v1")
+
+	api.GET("/members", gin.WrapF(controller.GetAllMember))
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("server_port"), r))
 }
