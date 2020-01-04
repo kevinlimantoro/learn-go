@@ -48,6 +48,10 @@ type Android struct {
 	Model string
 }
 
+func init() {
+	fmt.Println("INIT CALLED")
+}
+
 func main() {
 	fmt.Println("hello world")
 
