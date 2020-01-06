@@ -10,8 +10,10 @@ import (
 // GetMembers = This method will return a list of members
 func (db *DB) GetMembers() []m.Member {
 	// perform a db.Query insert
-	rsMemberData, err := db.Query(`SELECT id, username, type FROM member.members M
-	INNER JOIN member.credits C ON C.memberId = M.id
+	rsMemberData, err := db.Query(`
+	SELECT id, username, type 
+	 FROM members M
+	INNER JOIN credits C ON C.memberId = M.id
 	 LIMIT 200`)
 	defer rsMemberData.Close()
 
@@ -34,12 +36,11 @@ func (db *DB) GetMembers() []m.Member {
 
 // GetMemberByID = This method will return a list of members
 func (db *DB) GetMemberByID(id int, t string) *m.Member {
-	fmt.Println(id)
 	// perform a db.Query insert
 	stmt, _ := db.Prepare(`
 	SELECT id, username, type 
-	FROM member.members M
-	INNER JOIN member.credits C ON C.memberId = M.id
+	FROM members M
+	INNER JOIN credits C ON C.memberId = M.id
 	WHERE M.id = ? AND (? = '' or M.type = ?)
 	 LIMIT 200`)
 

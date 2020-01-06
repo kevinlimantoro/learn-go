@@ -10,6 +10,7 @@ import (
 var (
 	// MemberDBName specify member database name in MySQL
 	MemberDBName = "member"
+	MySQLDBName  = "mysql"
 
 	memberDB *sql.DB
 )
@@ -27,7 +28,7 @@ func getConnString(dbName string) string {
 func InitDB(dbName string) {
 	fmt.Printf("Start Conencting to %s DB\n", dbName)
 	db, err := sql.Open("mysql", getConnString(dbName))
-
+	fmt.Println(db)
 	// defer db.Close()
 	// if there is an error opening the connection, handle it
 	if err != nil {
@@ -45,7 +46,7 @@ func InitDB(dbName string) {
 	// forever (which is the default behavior).
 	db.SetConnMaxLifetime(time.Hour)
 	switch dbName {
-	case MemberDBName:
+	case MemberDBName, MySQLDBName:
 		memberDB = db
 	}
 }
@@ -54,7 +55,7 @@ func InitDB(dbName string) {
 func GetDB(dbName string) *DB {
 	var res *DB
 	switch dbName {
-	case MemberDBName:
+	case MemberDBName, MySQLDBName:
 		res = &DB{memberDB}
 	}
 	return res
