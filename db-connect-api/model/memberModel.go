@@ -5,3 +5,8 @@ type Member struct {
 	Username string `json:"name"`
 	Type     string `json:"type"`
 }
+
+type MemberInput struct {
+	Id int    `json:"id"`
+	T  string `json:"t"`
+}
